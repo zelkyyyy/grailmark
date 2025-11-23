@@ -50,7 +50,7 @@ function FloatingPaths({
 }
 
 export function BackgroundPaths({
-  title = 'GrailMark'
+  title = 'GrailMrk'
 }) {
   const words = title.split(' ');
 
