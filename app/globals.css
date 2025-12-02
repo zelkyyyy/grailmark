@@ -142,3 +142,48 @@
     }
   }
 }
+
+::-webkit-scrollbar {
+  @apply w-0;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral-950;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-transparent rounded-xl;
+  @apply duration-500;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-neutral-500;
+}
+
+@keyframes letter-hover {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.anim {
+  animation: letter-hover 3s ease-in-out 1;
+}
+
+@keyframes jumping {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+.jump {
+  animation: jumping 3s infinite ease-in-out;
+}
+html {
+  scroll-behavior: smooth;
+}

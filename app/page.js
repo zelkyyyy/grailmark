@@ -1,15 +1,19 @@
+'use client';
 import Image from "next/image";
 import React from "react";
 import ShopList from "@/components/ShopList";
  import ArtisticLanding from "@/components/ArtisticLanding";
  import Hero from "@/components/Hero";
-export default function Home() {
-  return (
-    <div className="flex  flex-col min-h-screen items-center justify-center bg-neural-900 font-sans">
+import Login from "@/components/Login";
+import { useState } from "react";
 
-      <ArtisticLanding />
-      <Hero />
-      <ShopList />
-    </div>
-  );
+export default function Home() {
+    const [loggedIn, setLoggedIn] = useState(false);
+      return (
+        <div className="flex  flex-col min-h-screen items-center justify-center bg-neutral-900 font-sans">
+          <ArtisticLanding />
+          <Hero loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+          {loggedIn && <ShopList />}
+        </div>
+      );
 }
