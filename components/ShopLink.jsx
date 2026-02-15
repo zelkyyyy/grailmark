@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 const ShopLink = (props) => {
   const hostname = new URL(props.shop.url).hostname;
   // Domyślnie ustawiamy fallback na Clearbit, dopóki Brandfetch nie odpowie
-  const [logoUrl, setLogoUrl] = useState(`https://logo.clearbit.com/${hostname}`);
+  const [logoUrl, setLogoUrl] = useState(`https://logos.hunter.io/${hostname}`);
 
   const handleDelete = (e) => {
     e.preventDefault()
