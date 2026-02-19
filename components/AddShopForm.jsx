@@ -80,7 +80,7 @@ export default function AddShopForm({ onShopAdded, onClose }) {
           <button 
             type="submit" 
             disabled={loading}
-            className="bg-neutral-300 text-neutral-900  p-2 px-6 rounded-xl hover:bg-neutral-400 disabled:opacity-50 transition-all"
+            className="bg-neutral-300 text-neutral-900  p-2 px-6 rounded-xl hover:bg-neutral-400 disabled:opacity-50 transition-all w-auto"
           >
             {loading ? 'Dodawanie...' : 'Dodaj'}
           </button>
