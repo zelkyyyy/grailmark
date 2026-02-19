@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import Footer from "@/components/Footer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -12,17 +12,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "GrailMark - Your Outfit, Your Identity",
-  description: "Place to find yourself. Your outfit tells more than 1000 words.",
+  title: "ClothSet",
+  description: "Place to find yourself. Your future outfit tells more about you, than your past life.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="pl">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Footer />
       </body>
     </html>
   );
