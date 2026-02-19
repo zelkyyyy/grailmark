@@ -1,47 +1,86 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 
 const ShopLink = (props) => {
-  const hostname = new URL(props.shop.url).hostname;
-  // Domyślnie ustawiamy fallback na Clearbit, dopóki Brandfetch nie odpowie
-  const [logoUrl, setLogoUrl] = useState(`https://logos.hunter.io/${hostname}`);
+  const getHostname = (url) => {
+    try {
+      const { hostname } = new URL(url);
+      return hostname.replace('www.', '');
+    } catch (e) {
+      return '';
+    }
+  };
+
+  const hostname = getHostname(props.shop.url);
+
+  // 1. Unavatar to agregator - szuka wszędzie.
+  // Parametr ?ttl=... cache'uje wynik na tydzień.
+  const primarySource = `https://unavatar.io/${hostname}?ttl=604800`;
+  
+  // 2. Google Favicon API - to nasza "ostatnia deska ratunku". 
+  // Zwraca małą ikonkę, ale działa w 99.9% przypadków. sz=128 prosi o większy rozmiar.
+  const backupSource = `https://www.google.com/s2/favicons?domain=${hostname}&sz=128`;
+
+  const [imgSrc, setImgSrc] = useState(primarySource);
+  const [hasError, setHasError] = useState(false);
 
   const handleDelete = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (props.delete) return props.delete(props.shop.id)
-    if (props.onDelete) return props.onDelete(props.shop.id)
-  }
+    e.preventDefault();
+    e.stopPropagation();
+    if (props.delete) return props.delete(props.shop.id);
+    if (props.onDelete) return props.onDelete(props.shop.id);
+  };
 
- 
+  // Funkcja obsługująca błąd ładowania obrazka
+  const handleError = () => {
+    if (!hasError) {
+      // Jeśli pierwsze źródło (Unavatar) padnie, przełącz na Google
+      setImgSrc(backupSource);
+      setHasError(true);
+    } else {
+      // Jeśli nawet Google padnie (bardzo rzadkie), ustawiamy placeholder
+      // Możesz tu dać ścieżkę do lokalnego pliku np. '/images/no-logo.png'
+      setImgSrc('https://via.placeholder.com/128?text=' + hostname[0].toUpperCase());
+    }
+  };
 
   return (
-    <div className='relative '>
-     {props.deleteOn && <button 
-        onClick={handleDelete} 
-        className='absolute z-20 font-bold cursor-pointer -right-2 -top-2 bg-red-700/30 text-red-600 border border-red-500/30  rounded-full w-6 h-6 items-center align-center justify-center flex'
-      >
-        x
-      </button> }
+    <div className='relative group'>
 
-      <a 
-        href={props.shop.url} 
-        target='_blank' 
-        rel='noopener noreferrer' 
-        className="flex flex-col gap-2 p-4 items-center justify-center lg:w-auto w-77 h-48 transition-all border border-white/10 hover:border-white/30 hover:bg-neutral-200/40 duration-300 cursor-pointer bg-neutral-200/20 backdrop-blur-[2px] shadow-xl shadow-neutral-900/30 rounded-xl"
+
+      <a
+        href={props.shop.url}
+        target='_blank'
+        rel='noopener noreferrer'
+        className="flex flex-col gap-3 w-72 p-4 items-center justify-center border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-xl hover:border-white/30 transition-all shadow-xl shadow-neutral-900/30 cursor-pointer"
       >
-        {/* Usunąłem rounded-full i aspect-square, bo prawdziwe logo (np. napis) 
-            będzie brzydko wyglądać wciśnięte w kółko. Dodałem object-contain. */}
-        <img 
-          rel='noreferrer noopener' 
-          className='w-32 h-32 object-cover rounded-full text-white max-w-48' 
-          src={logoUrl} 
-          alt={props.shop.name} 
-          loading='lazy'
-        />
-        <h2 className='text-xl font-bold text-neutral-300'>{props.shop.name}</h2>
+        <div className="w-24 h-24 flex group items-center justify-center bg-white rounded-lg aspect-square p-2 overflow-hidden shadow-sm">
+                {(
+        <button
+          onClick={handleDelete}
+          className='absolute cursor-pointer -top-2 -right-2 z-10 opacity-0 group-hover:opacity-100 hover:duration-700 delay-75 bg-red-500/20 border border-red-600/60 hover:bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center transition-all'
+        >
+          ×
+        </button>
+      )}
+            <img
+            className='w-full h-full object-cover rounded-e-md'
+            src={imgSrc}
+            alt={props.shop.name}
+            loading='lazy'
+            onError={handleError}
+            />
+        </div>
+        
+        <h2 className='text-2xl font-bold text-neutral-300 text-center  px-2'>
+            {props.shop.name}
+        </h2>
+          <div className="flex items-center gap-2 text-xs text-neutral-400 bg-white/5 px-2 py-1 rounded-full">
+            {/* <img src={logoUrl} alt="source" className="w-4 h-4 rounded-full" /> */}
+            <span className="max-w-[200px] truncate">{hostname}</span>
+          </div>
       </a>
     </div>
-  )
-}
+  );
+};
 
-export default ShopLink
+export default ShopLink;

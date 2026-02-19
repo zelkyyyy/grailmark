@@ -6,14 +6,22 @@ import ShopList from "@/components/ShopList";
  import Hero from "@/components/Hero";
 import Login from "@/components/Login";
 import { useState } from "react";
-
+import Products from "@/app/prods/components/Products";
 export default function Home() {
     const [loggedIn, setLoggedIn] = useState(false);
+    const [shops, setShops] = useState(false);
+    const [products, setProducts] = useState(false);
       return (
-        <div className="flex  flex-col min-h-screen items-center justify-center bg-neutral-900 font-sans">
+        <div className="flex flex-col min-h-screen items-center justify-center bg-neutral-900 font-sans ">
           <ArtisticLanding />
           <Hero loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-          {loggedIn && <ShopList />}
+          <div className="flex md:flex-row flex-col items-start justify-center w-full">
+            {loggedIn && <ShopList />}
+            <div className="w-[1px] self-stretch bg-gradient-to-b from-white/30 via-white/90 to-white/30 z-10 "></div>
+            {loggedIn && <Products />}
+          </div>
+
+        
         </div>
       );
 }
