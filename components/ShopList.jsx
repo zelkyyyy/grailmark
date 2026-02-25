@@ -65,7 +65,7 @@ export default function ShopList() {
   return (
     <div id="lista" className='anim z-10 flex flex-col items-center  justify-center bg-black/40 backdrop-blur-xs w-full py-8 duration-500 px-[1em]'>
       {errorMsg && <p className="text-red-500 mb-4">{errorMsg}</p>}
-      <div className='mx-auto'>
+      <div className='mx-auto w-full'>
         <h2 className="text-[4em] font-bold text-neutral-200 mb-8  text-center">Twoje sklepy</h2>
         {/* <div className='flex flex-row gap-2 '>
         {<button onClick={() => setAddShop(!addShop)} className='p-3 text-neutral-900 border border-white/20 hover:bg-white/60 duration-300 font-bold backdrop-blur-sm bg-white/90 cursor-pointer rounded-xl'>{addShop ? 'Cancel' : 'Add bookmark'}</button>}

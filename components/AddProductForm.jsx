@@ -57,7 +57,7 @@ const AddProductForm = ({ onProductAdded }) => {
   };
 
   return (
-    <div className="">
+    <div className="w-4/5 mx-auto">
       
       {/* Input Linku */}
       <div className="flex gap-2 lg:flex-row flex-col justify-center items-center max-w-2xl mx-auto w-full">

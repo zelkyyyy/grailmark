@@ -170,7 +170,7 @@
 }
 
 .anim {
-  animation: letter-hover 3s ease-in-out 1;
+  animation: letter-hover 1s ease-in-out 1;
 }
 
 @keyframes jumping {

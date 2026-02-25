@@ -53,9 +53,9 @@ export default function AddShopForm({ onShopAdded, onClose }) {
   }
 
   return (
-    <div className=" max-w-3xl mx-auto">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-md">
-        <div className="flex lg:flex-row flex-col gap-2 ">
+    <div className="mx-auto w-4/5">
+      <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4 text-md">
+
           {/* Input URL teraz kontroluje też nazwę */}
           <input
             type="url"
@@ -80,11 +80,11 @@ export default function AddShopForm({ onShopAdded, onClose }) {
           <button 
             type="submit" 
             disabled={loading}
-            className="bg-neutral-300 text-neutral-900  p-2 px-6 rounded-xl hover:bg-neutral-400 disabled:opacity-50 transition-all"
+            className="bg-neutral-300 text-neutral-900 w-fit m-auto  p-2 px-6 rounded-xl hover:bg-neutral-400 disabled:opacity-50 transition-all"
           >
             {loading ? 'Dodawanie...' : 'Dodaj'}
           </button>
-        </div>
+
         {/* <p className="text-xs text-neutral-500">Nazwa zostanie wygenerowana automatycznie na podstawie linku.</p> */}
       </form>
     </div>
