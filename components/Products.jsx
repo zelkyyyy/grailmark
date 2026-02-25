@@ -65,7 +65,7 @@ const Products = () => {
 return (
     <div className="w-full bg-black/40 backdrop-blur-xs text-neutral-200 py-8 px-[1em] self-stretch font-sans z-10">
       <h2 className="text-[4em] anim font-bold text-white mb-8 text-center">Twoje Produkty</h2>
-      <section className="  mb-16">
+      <section className="  mb-4">
         <AddProductForm onProductAdded={fetchProducts} />
       </section>
       <section className="max-w-7xl anim">

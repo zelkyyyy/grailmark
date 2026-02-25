@@ -6,7 +6,7 @@ const ProductCard = ({ product, onDelete }) => {
   const logoUrl = `https://unavatar.io/${domain}?ttl=604800`;
 
   return (
-    <div className='relative group w-72 flex flex-col gap-3 p-3 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-xl hover:border-white/30 transition-all'>
+    <div className='relative group w-36 lg:w-72 flex flex-col gap-3 p-3 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-xl hover:border-white/30 transition-all'>
       
       {/* Przycisk usuwania */}
       <button 
@@ -36,7 +36,7 @@ const ProductCard = ({ product, onDelete }) => {
           {product.title || 'Produkt bez nazwy'}
         </a>
         
-        <div className="flex justify-between items-center mt-1">
+        <div className="flex flex-col lg:flex-row gap-1 justify-between items-center mt-1">
           {/* Cena */}
           <span className="text-emerald-400 font-bold">
             {product.price ? `${product.price} ${product.currency || ''}` : '-'}

@@ -63,7 +63,7 @@ export default function ShopList() {
   }, [])
 
   return (
-    <div id="lista" className='anim z-10 flex flex-col items-center  justify-center bg-black/40 backdrop-blur-xs w-full py-8 duration-500 px-[1em]'>
+    <div id="lista" className='anim z-10 flex flex-col items-center  justify-center bg-black/40 backdrop-blur-xs w-full py-8 duration-500'>
       {errorMsg && <p className="text-red-500 mb-4">{errorMsg}</p>}
       <div className='mx-auto w-full'>
         <h2 className="text-[4em] font-bold text-neutral-200 mb-8  text-center">Twoje sklepy</h2>
@@ -77,7 +77,7 @@ export default function ShopList() {
       <AddShopForm onShopAdded={fetchProducts} onClose={setAddShop}/>
 
 
-      <div  className="flex lg:flex-row flex-col flex-wrap items-center justify-center gap-4 w-full mx-auto p-8">
+      <div  className="flex lg:flex-row  flex-wrap items-center justify-center gap-4 w-full mx-auto p-8">
         {products.map((shop) => (
           <ShopLink key={shop.id} shop={shop} delete={deleteShop} deleteOn={deleteOn} />
         ))}

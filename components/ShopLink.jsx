@@ -44,14 +44,14 @@ const ShopLink = (props) => {
   };
 
   return (
-    <div className='relative group'>
+    <div className='relative group '>
 
 
       <a
         href={props.shop.url}
         target='_blank'
         rel='noopener noreferrer'
-        className="flex flex-col gap-3 w-72 p-4 items-center justify-center border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-xl hover:border-white/30 transition-all shadow-xl shadow-neutral-900/30 cursor-pointer"
+        className="flex flex-col gap-3 w-36 lg:w-72 p-4  items-center justify-center border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-xl hover:border-white/30 transition-all shadow-xl shadow-neutral-900/30 cursor-pointer"
       >
         <div className="w-24 h-24 flex group items-center justify-center bg-white rounded-lg aspect-square p-2 overflow-hidden shadow-sm">
                 {(

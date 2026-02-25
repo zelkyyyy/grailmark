@@ -54,7 +54,7 @@ export default function AddShopForm({ onShopAdded, onClose }) {
 
   return (
     <div className="mx-auto w-4/5">
-      <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4 text-md">
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 text-md">
 
           {/* Input URL teraz kontroluje też nazwę */}
           <input
@@ -62,7 +62,7 @@ export default function AddShopForm({ onShopAdded, onClose }) {
             placeholder="Link do sklepu..."
             value={url}
             onChange={(e) => handleUrlChange(e.target.value)}
-            className="p-2 border border-neutral-200/20 rounded-xl flex-1 text-neutral-200 text-md  bg-transparent focus:outline-none focus:border-neutral-400 transition-colors"
+            className="p-2 border border-neutral-200/20 rounded-xl text-neutral-200 text-md  bg-transparent focus:outline-none focus:border-neutral-400 transition-colors"
             required
           />
           
@@ -73,7 +73,7 @@ export default function AddShopForm({ onShopAdded, onClose }) {
             placeholder="Nazwa"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="p-2 border border-neutral-200/20 rounded-xl  text-neutral-400 text-md bg-transparent w-full lg:w-40"
+            className="p-2 border  border-neutral-200/20 rounded-xl  text-neutral-400 text-md bg-transparent w-full "
             required
           />
 
