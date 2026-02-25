@@ -1,12 +1,10 @@
 'use client';
-import Image from "next/image";
 import React from "react";
 import ShopList from "@/components/ShopList";
  import ArtisticLanding from "@/components/ArtisticLanding";
  import Hero from "@/components/Hero";
-import Login from "@/components/Login";
 import { useState } from "react";
-import Products from "@/app/prods/components/Products";
+import Products from "@/components/Products";
 export default function Home() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [shops, setShops] = useState(false);
