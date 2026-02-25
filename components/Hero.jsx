@@ -1,8 +1,6 @@
 import React from 'react'
 import {Outfit} from 'next/font/google';
-import { useState } from 'react';
 import Login from './Login';
-import { Select } from '@react-three/drei';
 const outfit = Outfit({ subsets: ['latin'] });
 const Hero = ({ loggedIn, setLoggedIn }) => {
   return (
