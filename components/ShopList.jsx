@@ -1,9 +1,10 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Plus, X } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import { AnimatePresence } from 'framer-motion'
 import ShopLink from './ShopLink'
 import { supabase } from '../lib/supabase';
-import AddShopForm from './AddShopForm';
+import AddShopModal from './AddShopModal';
 
 export default function ShopList() {
   const [products, setProducts] = useState([]);
@@ -54,37 +55,41 @@ export default function ShopList() {
   }, [])
 
   return (
-    <div id="lista" className='anim z-10 w-full py-4 duration-500'>
-      {errorMsg && <p className="text-red-400 text-sm text-center mb-3">{errorMsg}</p>}
+    <div id="lista" className='anim z-10 w-full bg-black/40 backdrop-blur-xs text-neutral-200 py-16 px-[1em] self-stretch font-sans'>
+      <div className="mb-10 text-center">
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-bold text-transparent bg-clip-text bg-linear-30 from-neutral-500 to-neutral-100">
+          Your Shops
+        </h2>
+        <p className="mt-2 text-neutral-400 text-sm">Bookmark the stores you shop from most</p>
+      </div>
 
-      <div className="flex items-center gap-2 overflow-x-auto px-4 py-2 max-w-5xl mx-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {errorMsg && <p className="text-red-400 text-sm text-center mb-6">{errorMsg}</p>}
+
+      <div className="flex flex-wrap items-center justify-center gap-3 max-w-5xl mx-auto">
         {products.map((shop) => (
           <ShopLink key={shop.id} shop={shop} delete={deleteShop} />
         ))}
 
-        {addShop ? (
-          <div className="flex items-center gap-2 shrink-0">
-            <AddShopForm compact onShopAdded={() => { fetchProducts(); setAddShop(false); }} />
-            <button
-              onClick={() => setAddShop(false)}
-              aria-label="Cancel"
-              className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:bg-white/10 duration-200 cursor-pointer"
-            >
-              <X size={14} />
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setAddShop(true)}
-            className="shrink-0 flex items-center gap-1.5 pl-2 pr-4 py-1.5 rounded-full border border-dashed border-white/20 text-neutral-400 hover:text-white hover:border-white/40 duration-300 cursor-pointer"
-          >
-            <span className="w-7 h-7 flex items-center justify-center rounded-full bg-white/5">
-              <Plus size={14} />
-            </span>
-            <span className="text-sm font-medium">Add shop</span>
-          </button>
-        )}
+        <button
+          onClick={() => setAddShop(true)}
+          className="flex items-center gap-2 pl-4 pr-1.5 py-1.5 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-full hover:border-white/30 hover:bg-neutral-900/60 transition-all duration-300 shadow-md shadow-black/20 cursor-pointer"
+        >
+          <span className="text-sm font-medium text-neutral-200">Add link</span>
+          <span className="w-7 h-7 shrink-0 flex items-center justify-center rounded-full bg-white/10">
+            <Plus size={14} className="text-neutral-200" />
+          </span>
+        </button>
       </div>
+
+      <AnimatePresence>
+        {addShop && (
+          <AddShopModal
+            key="add-shop-modal"
+            onClose={() => setAddShop(false)}
+            onShopAdded={() => { fetchProducts(); setAddShop(false); }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
