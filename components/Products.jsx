@@ -21,7 +21,7 @@ const Products = () => {
         .order('created_at', { ascending: false })
 
         if (error) {
-        console.error('Błąd pobierania produktów:', error)
+        console.error('Failed to fetch products:', error)
         } else {
         setProducts(data || [])
         }

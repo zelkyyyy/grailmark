@@ -17,11 +17,22 @@ const AddProductForm = ({ onProductAdded, embedded = false }) => {
     setError('');
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+
       const res = await fetch('/api/scrape', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
         body: JSON.stringify({ url }),
       });
       const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Could not fetch data from that link');
+        return;
+      }
 
       const domain = new URL(url).hostname.replace('www.', '');
 
