@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Link2, Tag, Plus, Loader2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
-export default function AddShopForm({ onShopAdded, onClose }) {
+export default function AddShopForm({ onShopAdded, onClose, compact = false }) {
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
@@ -51,6 +51,41 @@ export default function AddShopForm({ onShopAdded, onClose }) {
       if (onShopAdded) onShopAdded()
     }
     setLoading(false)
+  }
+
+  if (compact) {
+    return (
+      <div className="shrink-0">
+        <form onSubmit={handleSubmit} className="flex items-center gap-2">
+          <input
+            type="url"
+            placeholder="Shop link…"
+            value={url}
+            onChange={(e) => handleUrlChange(e.target.value)}
+            className="w-36 sm:w-44 h-9 px-3 rounded-full border border-white/10 bg-white/5 text-xs text-neutral-100 placeholder:text-neutral-500 outline-none transition focus:border-white/30 focus:bg-white/10"
+            required
+            autoFocus
+          />
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-24 h-9 px-3 rounded-full border border-white/10 bg-white/5 text-xs text-neutral-100 placeholder:text-neutral-500 outline-none transition focus:border-white/30 focus:bg-white/10"
+            required
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            aria-label="Add shop"
+            className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-white text-neutral-900 hover:bg-neutral-200 duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          >
+            {loading ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+          </button>
+        </form>
+        {error && <p className="mt-1.5 text-xs text-red-400">{error}</p>}
+      </div>
+    )
   }
 
   return (

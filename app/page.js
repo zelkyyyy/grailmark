@@ -21,9 +21,9 @@ export default function Home() {
         <div className="flex flex-col min-h-screen items-center justify-center bg-neutral-900 font-sans">
           <ArtisticLanding />
           <Hero loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-          <div className="flex md:flex-row flex-col items-start justify-center w-full">
-            {loggedIn && <Products />}
+          <div className="flex flex-col items-center justify-center w-full">
             {loggedIn && <ShopList />}
+            {loggedIn && <Products />}
           </div>
         </div>
     );
