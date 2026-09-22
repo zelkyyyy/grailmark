@@ -1,15 +1,17 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { supabase } from '@/lib/supabase' // Upewnij się, że ścieżka do supabase jest poprawna
-import AddProductForm from './AddProductForm'
+import AddProductModal from './AddProductModal'
+import AddProductCard from './AddProductCard'
 import ProductCard from './ProductCard'
-import { ShoppingBag } from 'lucide-react'
 
 const Products = () => {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
+    const [showAddModal, setShowAddModal] = useState(false)
 
       const fetchProducts = async () => {
         setLoading(true)
@@ -31,14 +33,14 @@ const Products = () => {
           // Pobierz sesję
           const { data: { user } } = await supabase.auth.getUser()
           setUser(user)
-    
+
           if (user) {
             fetchProducts()
           } else {
             setLoading(false)
           }
         }
-    
+
         getUserAndProducts()
       }, [])
 
@@ -67,18 +69,15 @@ return (
         </h2>
         <p className="mt-2 text-neutral-400 text-sm">Everything you&apos;re keeping an eye on, in one place</p>
       </div>
-      <section className="mb-10">
-        <AddProductForm onProductAdded={fetchProducts} />
-      </section>
       <section className="max-w-7xl mx-auto anim">
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-64 sm:h-80 bg-neutral-900/50 rounded-2xl animate-pulse" />
+              <div key={i} className="h-44 sm:h-56 bg-neutral-900/50 rounded-xl animate-pulse" />
             ))}
           </div>
-        ) : products.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+        ) : (
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             {products.map((product) => (
               <ProductCard
                 key={product.id}
@@ -86,15 +85,20 @@ return (
                 onDelete={handleDelete}
               />
             ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center gap-3 text-center py-20 border border-dashed border-neutral-800 rounded-2xl bg-neutral-900/20">
-            <ShoppingBag size={28} className="text-neutral-600" />
-            <h3 className="text-lg font-medium text-neutral-400">Nothing here yet</h3>
-            <p className="text-neutral-500 text-sm">Paste a product link above to add your first one.</p>
+            <AddProductCard onClick={() => setShowAddModal(true)} />
           </div>
         )}
       </section>
+
+      <AnimatePresence>
+        {showAddModal && (
+          <AddProductModal
+            key="add-product-modal"
+            onClose={() => setShowAddModal(false)}
+            onProductAdded={() => { fetchProducts(); setShowAddModal(false); }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
