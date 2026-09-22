@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
+import { Link2, ImageOff, X, Check, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase'; // Twoja instancja supabase
 
 const AddProductForm = ({ onProductAdded }) => {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState(null); // Tutaj trzymamy dane ze scrapingu
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [preview, setPreview] = useState(null); // Scraped data lives here
 
-  // Krok 1: Pobierz dane (Scraping)
+  // Step 1: fetch preview data (scraping)
   const handleFetch = async (e) => {
     e.preventDefault();
     if (!url) return;
     setLoading(true);
+    setError('');
 
     try {
       const res = await fetch('/api/scrape', {
@@ -18,8 +22,7 @@ const AddProductForm = ({ onProductAdded }) => {
         body: JSON.stringify({ url }),
       });
       const data = await res.json();
-      
-      // Wyciągamy domenę do zapisu
+
       const domain = new URL(url).hostname.replace('www.', '');
 
       setPreview({
@@ -31,15 +34,17 @@ const AddProductForm = ({ onProductAdded }) => {
         domain
       });
     } catch (err) {
-      alert('Nie udało się pobrać danych ze strony');
+      setError('Could not fetch data from that link');
     } finally {
       setLoading(false);
     }
   };
 
-  // Krok 2: Zapisz do bazy
+  // Step 2: save to the database
   const handleSave = async () => {
     if (!preview) return;
+    setSaving(true);
+    setError('');
 
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -48,67 +53,92 @@ const AddProductForm = ({ onProductAdded }) => {
       .insert([{ ...preview, user_id: user.id }]);
 
     if (error) {
-      alert('Błąd zapisu!');
+      setError('Failed to save the product');
+      setSaving(false);
     } else {
       setUrl('');
       setPreview(null);
-      if (onProductAdded) onProductAdded(); // Odśwież listę
+      setSaving(false);
+      if (onProductAdded) onProductAdded(); // Refresh the list
     }
   };
 
   return (
-    <div className="w-4/5 mx-auto">
-      
-      {/* Input Linku */}
-      <div className="flex gap-2 lg:flex-row flex-col justify-center items-center max-w-2xl mx-auto w-full">
-        <input
-          type="url"
-          placeholder="Link do produktu..."
-          className="w-full max-w-lg border border-neutral-700 text-white px-4 py-2 rounded-xl focus:outline-none focus:border-neutral-200"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-        <button 
-          onClick={handleFetch}
-          disabled={loading}
-          className="bg-neutral-200 lg:w-auto md:w-full hover:bg-neutral-400 duration-200 text-neutral-900 px-6 py-2 rounded-xl disabled:opacity-50"
-        >
-          {loading ? 'Szukam...' : 'Pobierz'}
-        </button>
-      </div>
+    <div className="w-full max-w-2xl mx-auto px-4">
 
-      {/* Podgląd przed zapisaniem */}
+      {/* Link input */}
+      <form onSubmit={handleFetch} className="flex gap-3 flex-col sm:flex-row justify-center items-center mx-auto w-full">
+        <div className="flex flex-1 w-full items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 transition focus-within:border-white/30 focus-within:bg-white/10">
+          <Link2 size={16} className="shrink-0 text-neutral-500" />
+          <input
+            type="url"
+            placeholder="Product link…"
+            className="w-full min-w-0 bg-transparent py-2.5 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex items-center justify-center gap-2 w-full sm:w-auto bg-white hover:bg-neutral-200 duration-300 text-neutral-900 px-6 py-2.5 rounded-xl font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
+          {loading && <Loader2 size={16} className="animate-spin" />}
+          {loading ? 'Fetching…' : 'Fetch'}
+        </button>
+      </form>
+
+      {error && <p className="mt-2 text-sm text-red-400 text-center">{error}</p>}
+
+      {/* Preview before saving */}
       {preview && (
-        <div className="mt-6 flex gap-4 animate-in fade-in slide-in-from-top-2">
-          {/* Obrazek */}
-          <div className="w-32 h-32 bg-neutral-800 rounded-lg overflow-hidden shrink-0">
-             {preview.image_url && <img src={preview.image_url} className="w-full h-full object-cover" />}
+        <div className="mt-6 flex gap-4 p-4 rounded-2xl border border-white/10 bg-neutral-900/40 backdrop-blur-md">
+          <div className="w-24 h-24 sm:w-32 sm:h-32 shrink-0 bg-white/5 rounded-xl overflow-hidden flex items-center justify-center">
+            {preview.image_url ? (
+              <img src={preview.image_url} className="w-full h-full object-cover" alt="" />
+            ) : (
+              <ImageOff size={20} className="text-neutral-600" />
+            )}
           </div>
 
-          {/* Edytowalne pola (jakby skrypt się pomylił) */}
-          <div className="flex-1 flex flex-col gap-2">
-            <input 
-              value={preview.title} 
-              onChange={e => setPreview({...preview, title: e.target.value})}
-              className="bg-transparent border-b border-neutral-700 text-white font-bold w-full focus:outline-none focus:border-blue-500"
+          {/* Editable fields in case the scraper got something wrong */}
+          <div className="flex-1 flex flex-col gap-2 min-w-0">
+            <input
+              value={preview.title}
+              onChange={e => setPreview({ ...preview, title: e.target.value })}
+              placeholder="Title"
+              className="bg-transparent border-b border-white/10 text-white text-sm font-medium w-full py-1 focus:outline-none focus:border-white/40"
             />
-            <div className="flex gap-2">
-               <input 
-                  value={preview.price} 
-                  onChange={e => setPreview({...preview, price: e.target.value})}
-                  className="bg-transparent border-b border-neutral-700 text-emerald-400 w-24 focus:outline-none"
-                  placeholder="Cena"
-                />
-                <input 
-                  value={preview.currency} 
-                  onChange={e => setPreview({...preview, currency: e.target.value})}
-                  className="bg-transparent border-b border-neutral-700 text-neutral-400 w-16 focus:outline-none"
-                />
+            <div className="flex gap-3">
+              <input
+                value={preview.price}
+                onChange={e => setPreview({ ...preview, price: e.target.value })}
+                className="bg-transparent border-b border-white/10 text-emerald-400 text-sm w-20 py-1 focus:outline-none focus:border-white/40"
+                placeholder="Price"
+              />
+              <input
+                value={preview.currency}
+                onChange={e => setPreview({ ...preview, currency: e.target.value })}
+                className="bg-transparent border-b border-white/10 text-neutral-400 text-sm w-16 py-1 focus:outline-none focus:border-white/40"
+              />
             </div>
-            
+
             <div className="mt-2 flex gap-2">
-              <button onClick={() => setPreview(null)} className="text-sm text-neutral-400 hover:text-white">Anuluj</button>
-              <button onClick={handleSave} className="text-sm bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1 rounded">Zapisz produkt</button>
+              <button
+                onClick={() => { setPreview(null); setError(''); }}
+                className="flex items-center gap-1 text-sm text-neutral-400 hover:text-white duration-200 cursor-pointer"
+              >
+                <X size={14} /> Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center gap-1.5 text-sm bg-emerald-600 hover:bg-emerald-500 duration-200 text-white px-4 py-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                Save product
+              </button>
             </div>
           </div>
         </div>

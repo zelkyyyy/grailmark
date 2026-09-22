@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation'
+import { AnimatePresence } from 'framer-motion'
 import AuthForm from "@/components/AuthForm"; // Upewnij się, że ścieżka jest dobra
 import { supabase } from "../lib/supabase"; // Upewnij się, że ścieżka jest dobra
 import ConfirmAlert from './ConfirmAlert';
@@ -64,7 +65,9 @@ const Login = ({ setLoggedIn }) => {
         </button>
 
         {/* Modal (pokazuje się tylko gdy loginForm === true) */}
-        {loginForm && <AuthForm initialMode={loginForm} onClose={() => setLoginForm(null)} setConfirm={() => setConfirm(true)} />}
+        <AnimatePresence>
+          {loginForm && <AuthForm key="auth-form" initialMode={loginForm} onClose={() => setLoginForm(null)} setConfirm={() => setConfirm(true)} />}
+        </AnimatePresence>
         {confirm && <ConfirmAlert setConfirm={setConfirm} />}
 
       </div>
