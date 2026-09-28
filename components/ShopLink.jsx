@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Store } from 'lucide-react';
 import DeleteButton from './DeleteButton';
-
+import Image from 'next/image'
 const ShopLink = (props) => {
   const getHostname = (url) => {
     try {
@@ -40,13 +40,13 @@ const ShopLink = (props) => {
         href={props.shop.url}
         target='_blank'
         rel='noopener noreferrer'
-        className="flex items-center gap-2 pl-1.5 pr-4 py-1.5 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-full hover:border-white/30 hover:bg-neutral-900/60 transition-all duration-300 shadow-md shadow-black/20 cursor-pointer"
+        className="flex items-center gap-2 pl-1.5 pr-4 py-1.5 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-full hover:border-white/30 hover:bg-neutral-800 transition-all duration-300 shadow-md shadow-black/20 cursor-pointer"
       >
         <div className="w-7 h-7 shrink-0 flex items-center justify-center bg-white rounded-full overflow-hidden">
           {failed ? (
             <Store size={13} className="text-neutral-400" />
           ) : (
-            <img
+            <Image
               className='w-full h-full object-contain'
               src={imgSrc}
               alt={props.shop.name}

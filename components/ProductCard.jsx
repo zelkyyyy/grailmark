@@ -6,7 +6,7 @@ const ProductCard = ({ product, onDelete }) => {
   const domain = product.domain || new URL(product.url).hostname;
 
   return (
-    <div className='relative group w-40 sm:w-48 lg:w-56 flex flex-col gap-2.5 p-3 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-xl shadow-lg shadow-black/20 hover:border-white/30 hover:-translate-y-1 transition-all duration-300'>
+    <div className='relative group w-40 sm:w-48 lg:w-56 flex flex-col gap-2.5 p-3 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-xl shadow-lg shadow-black/20 hover:border-white/30 hover:bg-neutral-800/40 transition-all duration-300'>
 
       <DeleteButton size="sm" onConfirm={() => onDelete(product.id)} />
 

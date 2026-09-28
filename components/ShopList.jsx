@@ -51,7 +51,10 @@ export default function ShopList() {
   }
 
   useEffect(() => {
-    fetchProducts();
+    const fun = async () => {
+      fetchProducts();
+    }
+    fun()
   }, [])
 
   return (
@@ -72,7 +75,7 @@ export default function ShopList() {
 
         <button
           onClick={() => setAddShop(true)}
-          className="flex items-center gap-2 pl-4 pr-1.5 py-1.5 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-full hover:border-white/30 hover:bg-neutral-900/60 transition-all duration-300 shadow-md shadow-black/20 cursor-pointer"
+          className="flex items-center gap-2 pl-4 pr-1.5 py-1.5 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-full hover:border-white/30 hover:bg-neutral-800/80 transition-all duration-500 shadow-md shadow-black/20 cursor-pointer"
         >
           <span className="text-sm font-medium text-neutral-200">Add link</span>
           <span className="w-7 h-7 shrink-0 flex items-center justify-center rounded-full bg-white/10">
