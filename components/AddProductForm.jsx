@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link2, ImageOff, X, Check, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase'; // Twoja instancja supabase
 
-const AddProductForm = ({ onProductAdded }) => {
+const AddProductForm = ({ onProductAdded, embedded = false }) => {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -75,7 +75,7 @@ const AddProductForm = ({ onProductAdded }) => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4">
+    <div className={embedded ? 'w-full' : 'w-full max-w-2xl mx-auto px-4'}>
 
       {/* Link input */}
       <form onSubmit={handleFetch} className="flex gap-3 flex-col sm:flex-row justify-center items-center mx-auto w-full">
@@ -88,6 +88,7 @@ const AddProductForm = ({ onProductAdded }) => {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             required
+            autoFocus={embedded}
           />
         </div>
         <button

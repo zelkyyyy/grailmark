@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Link2, Tag, Plus, Loader2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 
-export default function AddShopForm({ onShopAdded, onClose }) {
+export default function AddShopForm({ onShopAdded, embedded = false }) {
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
@@ -54,7 +54,7 @@ export default function AddShopForm({ onShopAdded, onClose }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4">
+    <div className={embedded ? 'w-full' : 'mx-auto w-full max-w-2xl px-4'}>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
         <div className="flex flex-1 items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 transition focus-within:border-white/30 focus-within:bg-white/10">
           <Link2 size={16} className="shrink-0 text-neutral-500" />
@@ -65,6 +65,7 @@ export default function AddShopForm({ onShopAdded, onClose }) {
             onChange={(e) => handleUrlChange(e.target.value)}
             className="w-full min-w-0 bg-transparent py-2.5 text-sm text-neutral-100 placeholder:text-neutral-500 outline-none"
             required
+            autoFocus={embedded}
           />
         </div>
 

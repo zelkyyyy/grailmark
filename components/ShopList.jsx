@@ -1,15 +1,15 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Store } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import { AnimatePresence } from 'framer-motion'
 import ShopLink from './ShopLink'
 import { supabase } from '../lib/supabase';
-import AddShopForm from './AddShopForm';
+import AddShopModal from './AddShopModal';
 
 export default function ShopList() {
   const [products, setProducts] = useState([]);
-  const [errorMsg, setErrorMsg] = useState(null); 
+  const [errorMsg, setErrorMsg] = useState(null);
   const [addShop, setAddShop] = useState(false);
-  const [deleteOn, setDeleteOn] = useState(false);
   const fetchProducts = async () => {
     const { data, error } = await supabase
       .from('shops')
@@ -24,7 +24,7 @@ export default function ShopList() {
 
     if (data) {
       setProducts(data)
-      setErrorMsg(null) 
+      setErrorMsg(null)
     }
   }
 
@@ -55,35 +55,41 @@ export default function ShopList() {
   }, [])
 
   return (
-    <div id="lista" className='anim z-10 flex flex-col items-center justify-center bg-black/40 backdrop-blur-xs w-full py-16 duration-500'>
-      <div className='mx-auto w-full'>
-        <div className="mb-10 text-center">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-bold text-transparent bg-clip-text bg-linear-30 from-neutral-500 to-neutral-100">
-            Your Shops
-          </h2>
-          <p className="mt-2 text-neutral-400 text-sm">Bookmark the stores you shop from most</p>
-        </div>
-
-        {errorMsg && <p className="text-red-400 text-sm text-center mb-6">{errorMsg}</p>}
-
-        <div className="mb-10">
-          <AddShopForm onShopAdded={fetchProducts} onClose={setAddShop} />
-        </div>
-
-        {products.length > 0 ? (
-          <div className="flex lg:flex-row flex-wrap items-center justify-center gap-4 sm:gap-6 w-full mx-auto max-w-7xl px-4">
-            {products.map((shop) => (
-              <ShopLink key={shop.id} shop={shop} delete={deleteShop} deleteOn={deleteOn} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center gap-3 text-center py-20 mx-4 border border-dashed border-neutral-800 rounded-2xl bg-neutral-900/20">
-            <Store size={28} className="text-neutral-600" />
-            <h3 className="text-lg font-medium text-neutral-400">No shops yet</h3>
-            <p className="text-neutral-500 text-sm">Add a store link above to save it here.</p>
-          </div>
-        )}
+    <div id="lista" className='anim z-10 w-full bg-black/40 backdrop-blur-xs text-neutral-200 py-16 px-[1em] self-stretch font-sans'>
+      <div className="mb-10 text-center">
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-bold text-transparent bg-clip-text bg-linear-30 from-neutral-500 to-neutral-100">
+          Your Shops
+        </h2>
+        <p className="mt-2 text-neutral-400 text-sm">Bookmark the stores you shop from most</p>
       </div>
+
+      {errorMsg && <p className="text-red-400 text-sm text-center mb-6">{errorMsg}</p>}
+
+      <div className="flex flex-wrap items-center justify-center gap-3 max-w-5xl mx-auto">
+        {products.map((shop) => (
+          <ShopLink key={shop.id} shop={shop} delete={deleteShop} />
+        ))}
+
+        <button
+          onClick={() => setAddShop(true)}
+          className="flex items-center gap-2 pl-4 pr-1.5 py-1.5 border border-white/10 bg-neutral-900/40 backdrop-blur-md rounded-full hover:border-white/30 hover:bg-neutral-900/60 transition-all duration-300 shadow-md shadow-black/20 cursor-pointer"
+        >
+          <span className="text-sm font-medium text-neutral-200">Add link</span>
+          <span className="w-7 h-7 shrink-0 flex items-center justify-center rounded-full bg-white/10">
+            <Plus size={14} className="text-neutral-200" />
+          </span>
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {addShop && (
+          <AddShopModal
+            key="add-shop-modal"
+            onClose={() => setAddShop(false)}
+            onShopAdded={() => { fetchProducts(); setAddShop(false); }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
