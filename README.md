@@ -8,6 +8,10 @@ Po wklejeniu linku do produktu aplikacja sama pobiera jego nazwę, zdjęcie i ce
 Link do działającej aplikacji:
 https://grailmark.vercel.app
 
+Konto testowe:
+Login: demo@grailmark.app
+Hasło: demo123
+
 ## Technologie
 
 - Next.js (App Router)
@@ -31,11 +35,13 @@ https://grailmark.vercel.app
 ## API
 
 ### Scrapowanie produktu:
+
 `POST /api/scrape`
 
 Przyjmuje link do produktu i zwraca jego nazwę, zdjęcie, cenę oraz walutę. Endpoint wymaga zalogowanego użytkownika (token w nagłówku `Authorization`).
 
 Dane są wyszukiwane po kolei w kilku źródłach. Jeśli jedno nie zadziała, sprawdzane jest kolejne:
+
 1. Dane strukturalne JSON-LD (`schema.org/Product`)
 2. Meta tagi Open Graph i Twitter
 3. Elementy HTML strony (np. `<h1>`, zdjęcia produktu)
