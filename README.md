@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Grailmark
 
-## Getting Started
+Aplikacja webowa do zapisywania produktów i sklepów w jednym miejscu, stworzona w Next.js.
+Po wklejeniu linku do produktu aplikacja sama pobiera jego nazwę, zdjęcie i cenę za pomocą własnego endpointu API do scrapingu. Dane każdego użytkownika są przechowywane w bazie Supabase (PostgreSQL).
 
-First, run the development server:
+## Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Link do działającej aplikacji:
+https://grailmark.vercel.app
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologie
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Next.js (App Router)
+- React
+- JavaScript
+- Tailwind CSS
+- Supabase (PostgreSQL, autoryzacja)
+- Cheerio (scraping HTML)
+- REST API (Next.js Route Handlers)
+- Git
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Funkcjonalności
 
-## Learn More
+- Rejestracja i logowanie użytkowników (Supabase Auth)
+- Dodawanie produktów na podstawie samego linku
+- Automatyczne pobieranie nazwy, zdjęcia i ceny produktu
+- Zapisywanie ulubionych sklepów z automatycznie pobieranym logo
+- Usuwanie produktów i sklepów
+- Responsywny interfejs z animacjami
 
-To learn more about Next.js, take a look at the following resources:
+## API
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Scrapowanie produktu:
+`POST /api/scrape`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Przyjmuje link do produktu i zwraca jego nazwę, zdjęcie, cenę oraz walutę. Endpoint wymaga zalogowanego użytkownika (token w nagłówku `Authorization`).
 
-## Deploy on Vercel
+Dane są wyszukiwane po kolei w kilku źródłach. Jeśli jedno nie zadziała, sprawdzane jest kolejne:
+1. Dane strukturalne JSON-LD (`schema.org/Product`)
+2. Meta tagi Open Graph i Twitter
+3. Elementy HTML strony (np. `<h1>`, zdjęcia produktu)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Logo sklepów
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Logo sklepu jest pobierane z serwisu unavatar.io. Jeśli się nie uda, aplikacja korzysta z zapasowego źródła (Google Favicons).
+
+## Bezpieczeństwo
+
+- Blokowanie zapytań do adresów wewnętrznych i prywatnych (ochrona przed SSRF), również po przekierowaniach
+- Limit czasu zapytania (8 s) i maksymalny rozmiar pobieranej strony (3 MB)
+- Klucze dostępowe przechowywane w zmiennych środowiskowych (`.env` nie trafia do repozytorium)
